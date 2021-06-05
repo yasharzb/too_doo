@@ -18,18 +18,18 @@ enum EntityType: String {
 }
 
 enum CommandArg {
-    case                CREATE  (EntityType, String, String, Int)
-    case                VIEW_ALL(String)
-    case                VIEW    (Int)
-    case                EDIT    (EntityType, Int, String)
-    case                DELETE  (Int)
-    case                SORT    (EntityType, Bool)
-    case                ADD     (Int, String)
-    indirect case       HELP    (CommandArg)
-    case                EXIT
+    case    CREATE  (EntityType, String, String, Int)
+    case    VIEW_ALL(String)
+    case    VIEW    (Int)
+    case    EDIT    (EntityType, Int, String)
+    case    DELETE  (Int)
+    case    SORT    (EntityType, Bool)
+    case    ADD     (Int, String)
+    case    HELP    (Command)
+    case    EXIT
 }
 
-enum Command: String {
+enum Command: String, CaseIterable {
     case    CREATE
     case    VIEW_ALL
     case    VIEW
@@ -39,27 +39,30 @@ enum Command: String {
     case    ADD
     case    HELP
     case    EXIT
-}
-
-enum CommandHelp: String {
-    case    CREATE
-        = "create item/category <title>/<name> <content>/- <priority>/-"
-    case    VIEW_ALL
-        = "view_all <category_name>"
-    case    VIEW
-        = "view <item_id>"
-    case    EDIT
-        = "edit title/content/priority <item_id> <new_value>"
-    case    DELETE
-        = "delete <item_id>"
-    case    SORT
-        = "sort title/priority/time true(ascending)/false(descending)"
-    case    ADD
-        = "add <item_id> <category_name>"
-    case    HELP
-        = "help <command>"
-    case    EXIT
-        = "exit"
+    
+    var help: String {
+        switch self {
+        case    .CREATE:
+            return "create item/category <title>/<name> <content>/- <priority>/-"
+        case    .VIEW_ALL:
+            return "view_all <category_name>"
+        case    .VIEW:
+            return "view <item_id>"
+        case    .EDIT:
+            return "edit title/content/priority <item_id> <new_value>"
+        case    .DELETE:
+            return "delete <item_id>"
+        case    .SORT:
+            return "sort title/priority/time true(ascending)/false(descending)"
+        case    .ADD:
+            return "add <item_id> <category_name>"
+        case    .HELP:
+            return "help <command>"
+        case    .EXIT:
+            return "exit"
+            
+        }
+    }
 }
 
 enum ParamOrder: Int {
