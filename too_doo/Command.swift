@@ -18,15 +18,15 @@ enum EntityType: String {
 }
 
 enum CommandArg {
-    case    CREATE  (EntityType, String, String, Int)
-    case    VIEW_ALL(String)
-    case    VIEW    (Int)
-    case    EDIT    (EntityType, Int, String)
-    case    DELETE  (Int)
-    case    SORT    (EntityType, Bool)
-    case    ADD     (Int, String)
-    case    HELP
-    case    EXIT
+    case                CREATE  (EntityType, String, String, Int)
+    case                VIEW_ALL(String)
+    case                VIEW    (Int)
+    case                EDIT    (EntityType, Int, String)
+    case                DELETE  (Int)
+    case                SORT    (EntityType, Bool)
+    case                ADD     (Int, String)
+    indirect case       HELP    (CommandArg)
+    case                EXIT
 }
 
 enum Command: String {
@@ -43,7 +43,7 @@ enum Command: String {
 
 enum CommandHelp: String {
     case    CREATE
-        = "create item/category <title>/<name> <content>/- <priority>/"
+        = "create item/category <title>/<name> <content>/- <priority>/-"
     case    VIEW_ALL
         = "view_all <category_name>"
     case    VIEW
@@ -57,7 +57,7 @@ enum CommandHelp: String {
     case    ADD
         = "add <item_id> <category_name>"
     case    HELP
-        = "help"
+        = "help <command>"
     case    EXIT
         = "exit"
 }
