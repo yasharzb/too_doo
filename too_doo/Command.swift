@@ -17,18 +17,6 @@ enum EntityType: String {
     case    CATEGORY
 }
 
-enum CommandArg {
-    case    CREATE  (EntityType, String, String, Int)
-    case    VIEW_ALL(String)
-    case    VIEW    (Int)
-    case    EDIT    (EntityType, Int, String)
-    case    DELETE  (Int)
-    case    SORT    (EntityType, Bool)
-    case    ADD     (Int, String)
-    case    HELP    (Command)
-    case    EXIT
-}
-
 enum Command: String, CaseIterable {
     case    CREATE
     case    VIEW_ALL
