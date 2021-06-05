@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		20A9370C266B9EFE007B5C64 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A9370B266B9EFE007B5C64 /* main.swift */; };
 		20A93713266BAA86007B5C64 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A93712266BAA86007B5C64 /* Command.swift */; };
+		20A93715266BC7E2007B5C64 /* CommandOperator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A93714266BC7E2007B5C64 /* CommandOperator.swift */; };
+		20A93717266BCE64007B5C64 /* CommandController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A93716266BCE64007B5C64 /* CommandController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,6 +29,8 @@
 		20A93708266B9EFE007B5C64 /* too_doo */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = too_doo; sourceTree = BUILT_PRODUCTS_DIR; };
 		20A9370B266B9EFE007B5C64 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		20A93712266BAA86007B5C64 /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
+		20A93714266BC7E2007B5C64 /* CommandOperator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandOperator.swift; sourceTree = "<group>"; };
+		20A93716266BCE64007B5C64 /* CommandController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +65,8 @@
 			children = (
 				20A9370B266B9EFE007B5C64 /* main.swift */,
 				20A93712266BAA86007B5C64 /* Command.swift */,
+				20A93714266BC7E2007B5C64 /* CommandOperator.swift */,
+				20A93716266BCE64007B5C64 /* CommandController.swift */,
 			);
 			path = too_doo;
 			sourceTree = "<group>";
@@ -124,7 +130,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				20A9370C266B9EFE007B5C64 /* main.swift in Sources */,
+				20A93717266BCE64007B5C64 /* CommandController.swift in Sources */,
 				20A93713266BAA86007B5C64 /* Command.swift in Sources */,
+				20A93715266BC7E2007B5C64 /* CommandOperator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
