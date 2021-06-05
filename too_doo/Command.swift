@@ -23,7 +23,7 @@ enum CommandArg {
     case    VIEW    (Int)
     case    EDIT    (EntityType, Int, String)
     case    DELETE  (Int)
-    case    SORT    (Bool)
+    case    SORT    (EntityType, Bool)
     case    ADD     (Int, String)
     case    HELP
     case    EXIT
@@ -53,9 +53,13 @@ enum CommandHelp: String {
     case    DELETE
         = "delete <item_id>"
     case    SORT
+        = "sort title/priority/time true(ascending)/false(descending)"
     case    ADD
+        = "add <item_id> <category_name>"
     case    HELP
+        = "help"
     case    EXIT
+        = "exit"
 }
 
 enum ParamOrder: Int {
