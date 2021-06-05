@@ -14,7 +14,7 @@ func handle_cmd(inp: String) -> Bool{
     let command = Command(rawValue: cmd)
     switch command {
     case .HELP:
-        print("Help")
+        handle_help(inpArray: inpArray)
     case .ADD:
         print("Add")
     case .CREATE:
@@ -30,7 +30,7 @@ func handle_cmd(inp: String) -> Bool{
     case .EXIT:
         return false
     default:
-        print("Default")
+        print("Not a valid command")
     }
     return true
 }
