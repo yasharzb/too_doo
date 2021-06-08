@@ -33,9 +33,31 @@ func ==(lhs: TodoItem, rhs: TodoItem) -> Bool {
 
 var items = [Int:TodoItem]()
 
-func createItem(title: String, content: String, priority: Int){
-    let newItem = TodoItem(title: title, content: content, priority: priority)
-    items[newItem.id] = newItem
+func checkNotNil(command: Command, _ args: Any?...) -> Bool{
+    for argument in args {
+        if argument == nil{
+            invalidCommand(command: command)
+            return false
+        }
+    }
+    return true
+}
+
+func invalidCommand(command: Command){
+    print("Invalid command structure!")
+    print(help(command: command))
+
+}
+
+
+func createItem(inpTitle: String?, inpContent: String?, inpPriority: Int?, command: Command){
+    if checkNotNil(command: command, inpTitle, inpContent, inpPriority){
+        let title = inpTitle!
+        let content = inpContent!
+        let priority = inpPriority!
+        let newItem = TodoItem(title: title, content: content, priority: priority)
+        items[newItem.id] = newItem
+    }
 }
 
 func viewAll(){
@@ -44,12 +66,15 @@ func viewAll(){
     }
 }
 
-func viewItem(id: Int){
-    let item = items[id]
-    if item != nil{
-        print(item!)
-    }else{
-        print("Item not found")
+func viewItem(inpId: Int?, command: Command){
+    if checkNotNil(command: command, inpId){
+        let id = inpId!
+        let item = items[id]
+        if item != nil{
+            print(item!)
+        }else{
+            print("Item not found!")
+        }
     }
 }
 
@@ -60,18 +85,26 @@ enum EDIT_TYPE: String, CaseIterable{
 }
 
 
-func editItem(id: Int, title: String?=nil, content: String?=nil, priority: Int?=nil){
-    if let item = items[id] {
-        item.title = title != nil ? title! : item.title
-        item.content = content != nil ? content! : item.content
-        item.priority = priority != nil ? priority! : item.priority
+func editItem(inpId: Int?, inpTitle: String?=nil, inpContent: String?=nil, inpPriority: Int?=nil, command: Command){
+    if checkNotNil(command: command, inpId){
+        let id = inpId!
+        if let item = items[id] {
+            item.title = inpTitle ?? item.title
+            item.content = inpContent ?? item.content
+            item.priority = inpPriority ?? item.priority
+        }else{
+            print("Item not found!")
+        }
     }
 }
 
-func deleteItem(id: Int){
-    let removedItem = items.removeValue(forKey: id)
-    if removedItem == nil{
-        print("Item not found")
+func deleteItem(inpId: Int?, command: Command){
+    if checkNotNil(command: command, inpId){
+        let id = inpId!
+        let removedItem = items.removeValue(forKey: id)
+        if removedItem == nil{
+            print("Item not found!")
+        }
     }
 }
 
@@ -81,29 +114,32 @@ enum SORT_TYPE: String, CaseIterable {
     case    TIME
 }
 
-func viewSorted(sortType: SORT_TYPE, asc: Bool=true){
-    func printItemArray(itemArray: Array<TodoItem>){
-        for item in itemArray{
-            print(item)
-        }
-    }
-    if asc{
-        switch sortType{
-            case .TITLE:
-                printItemArray(itemArray: Array(items.values).sorted{ $0.title < $1.title })
-            case .PRIORITY:
-                printItemArray(itemArray: Array(items.values).sorted{ $0.priority < $1.priority })
-            case .TIME:
-                printItemArray(itemArray: Array(items.values).sorted{ $0.time < $1.time })
-        }
-    }else{
-        switch sortType{
-                case .TITLE:
-                    printItemArray(itemArray: Array(items.values).sorted{ $0.title > $1.title })
-                case .PRIORITY:
-                    printItemArray(itemArray: Array(items.values).sorted{ $0.priority > $1.priority })
-                case .TIME:
-                    printItemArray(itemArray: Array(items.values).sorted{ $0.time > $1.time })
+func viewSorted(inpSortType: SORT_TYPE?, asc: Bool=true, command: Command){
+    if checkNotNil(command: command, inpSortType){
+        let sortType :SORT_TYPE = inpSortType!
+        func printItemArray(itemArray: Array<TodoItem>){
+            for item in itemArray{
+                print(item)
             }
         }
+        if asc{
+            switch sortType{
+                case .TITLE:
+                    printItemArray(itemArray: Array(items.values).sorted{ $0.title < $1.title })
+                case .PRIORITY:
+                    printItemArray(itemArray: Array(items.values).sorted{ $0.priority < $1.priority })
+                case .TIME:
+                    printItemArray(itemArray: Array(items.values).sorted{ $0.time < $1.time })
+            }
+        }else{
+            switch sortType{
+                    case .TITLE:
+                        printItemArray(itemArray: Array(items.values).sorted{ $0.title > $1.title })
+                    case .PRIORITY:
+                        printItemArray(itemArray: Array(items.values).sorted{ $0.priority > $1.priority })
+                    case .TIME:
+                        printItemArray(itemArray: Array(items.values).sorted{ $0.time > $1.time })
+                }
+        }
+    }
 }

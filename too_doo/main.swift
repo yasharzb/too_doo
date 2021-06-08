@@ -38,6 +38,7 @@ enum Command: String, CaseIterable {
     case    SORT
     case    ADD
     case    HELP
+    case    CLEAR
     case    EXIT
 
     var help: String {
@@ -53,11 +54,13 @@ enum Command: String, CaseIterable {
         case    .DELETE:
             return "delete <item_id>"
         case    .SORT:
-            return "sort title/priority/time true(ascending)/false(descending)"
+            return "sort title/priority/time [true(ascending/default)/false(descending)]"
         case    .ADD:
             return "add <category_name> <item1_id> [<item2_id> ..]"
         case    .HELP:
             return "help <command>"
+        case    .CLEAR:
+            return "clear"
         case    .EXIT:
             return "exit"
         }
@@ -72,7 +75,7 @@ enum ParamOrder: Int {
     case    PARAM_4
 }
 
-func handle_help(inpArray: [String]) {
+func handleHelp(inpArray: [String]) {
     if inpArray.count > ParamOrder.PARAM_1.rawValue {
         let cmdHelp = inpArray[ParamOrder.PARAM_1.rawValue].uppercased()
         print(help(command: Command(rawValue: cmdHelp)))
@@ -130,9 +133,31 @@ func ==(lhs: TodoItem, rhs: TodoItem) -> Bool {
 
 var items = [Int:TodoItem]()
 
-func createItem(title: String, content: String, priority: Int){
-    let newItem = TodoItem(title: title, content: content, priority: priority)
-    items[newItem.id] = newItem
+func checkNotNil(command: Command, _ args: Any?...) -> Bool{
+    for argument in args {
+        if argument == nil{
+            invalidCommand(command: command)
+            return false
+        }
+    }
+    return true
+}
+
+func invalidCommand(command: Command){
+    print("Invalid command structure!")
+    print(help(command: command))
+
+}
+
+
+func createItem(inpTitle: String?, inpContent: String?, inpPriority: Int?, command: Command){
+    if checkNotNil(command: command, inpTitle, inpContent, inpPriority){
+        let title = inpTitle!
+        let content = inpContent!
+        let priority = inpPriority!
+        let newItem = TodoItem(title: title, content: content, priority: priority)
+        items[newItem.id] = newItem
+    }
 }
 
 func viewAll(){
@@ -141,12 +166,15 @@ func viewAll(){
     }
 }
 
-func viewItem(id: Int){
-    let item = items[id]
-    if item != nil{
-        print(item!)
-    }else{
-        print("Item not found")
+func viewItem(inpId: Int?, command: Command){
+    if checkNotNil(command: command, inpId){
+        let id = inpId!
+        let item = items[id]
+        if item != nil{
+            print(item!)
+        }else{
+            print("Item not found!")
+        }
     }
 }
 
@@ -157,18 +185,26 @@ enum EDIT_TYPE: String, CaseIterable{
 }
 
 
-func editItem(id: Int, title: String?=nil, content: String?=nil, priority: Int?=nil){
-    if let item = items[id] {
-        item.title = title != nil ? title! : item.title
-        item.content = content != nil ? content! : item.content
-        item.priority = priority != nil ? priority! : item.priority
+func editItem(inpId: Int?, inpTitle: String?=nil, inpContent: String?=nil, inpPriority: Int?=nil, command: Command){
+    if checkNotNil(command: command, inpId){
+        let id = inpId!
+        if let item = items[id] {
+            item.title = inpTitle ?? item.title
+            item.content = inpContent ?? item.content
+            item.priority = inpPriority ?? item.priority
+        }else{
+            print("Item not found!")
+        }
     }
 }
 
-func deleteItem(id: Int){
-    let removedItem = items.removeValue(forKey: id)
-    if removedItem == nil{
-        print("Item not found")
+func deleteItem(inpId: Int?, command: Command){
+    if checkNotNil(command: command, inpId){
+        let id = inpId!
+        let removedItem = items.removeValue(forKey: id)
+        if removedItem == nil{
+            print("Item not found!")
+        }
     }
 }
 
@@ -178,31 +214,34 @@ enum SORT_TYPE: String, CaseIterable {
     case    TIME
 }
 
-func viewSorted(sortType: SORT_TYPE, asc: Bool=true){
-    func printItemArray(itemArray: Array<TodoItem>){
-        for item in itemArray{
-            print(item)
-        }
-    }
-    if asc{
-        switch sortType{
-            case .TITLE:
-                printItemArray(itemArray: Array(items.values).sorted{ $0.title < $1.title })
-            case .PRIORITY:
-                printItemArray(itemArray: Array(items.values).sorted{ $0.priority < $1.priority })
-            case .TIME:
-                printItemArray(itemArray: Array(items.values).sorted{ $0.time < $1.time })
-        }
-    }else{
-        switch sortType{
-                case .TITLE:
-                    printItemArray(itemArray: Array(items.values).sorted{ $0.title > $1.title })
-                case .PRIORITY:
-                    printItemArray(itemArray: Array(items.values).sorted{ $0.priority > $1.priority })
-                case .TIME:
-                    printItemArray(itemArray: Array(items.values).sorted{ $0.time > $1.time })
+func viewSorted(inpSortType: SORT_TYPE?, asc: Bool=true, command: Command){
+    if checkNotNil(command: command, inpSortType){
+        let sortType :SORT_TYPE = inpSortType!
+        func printItemArray(itemArray: Array<TodoItem>){
+            for item in itemArray{
+                print(item)
             }
         }
+        if asc{
+            switch sortType{
+                case .TITLE:
+                    printItemArray(itemArray: Array(items.values).sorted{ $0.title < $1.title })
+                case .PRIORITY:
+                    printItemArray(itemArray: Array(items.values).sorted{ $0.priority < $1.priority })
+                case .TIME:
+                    printItemArray(itemArray: Array(items.values).sorted{ $0.time < $1.time })
+            }
+        }else{
+            switch sortType{
+                    case .TITLE:
+                        printItemArray(itemArray: Array(items.values).sorted{ $0.title > $1.title })
+                    case .PRIORITY:
+                        printItemArray(itemArray: Array(items.values).sorted{ $0.priority > $1.priority })
+                    case .TIME:
+                        printItemArray(itemArray: Array(items.values).sorted{ $0.time > $1.time })
+                }
+        }
+    }
 }
 
 // -----------------
@@ -213,15 +252,19 @@ extension Array {
     }
 }
 
-func handleCreate(inpArray: [String]){
-    if inpArray[1] == "item"{
-        let priority = Int(inpArray.last!)!
-        let title = inpArray[2]
-        let content = Array(inpArray[3...inpArray.endIndex - 1]).joined(separator: " ")
-        createItem(title: title, content: content, priority: priority)
+func handleCreate(inpArray: [String], command: Command){
+    if inpArray.count >= 3 {
+        if inpArray[1] == "item"{
+            let priority = Int(inpArray.last ?? "") ?? nil
+            let title = inpArray[2]
+            let content = Array(inpArray[3...inpArray.endIndex - 2]).joined(separator: " ")
+            createItem(inpTitle: title, inpContent: content, inpPriority: priority, command: command)
+        }else{
+            let categoryName = inpArray[2]
+            // todo
+        }
     }else{
-        let categoryName = inpArray[2]
-        // todo
+        invalidCommand(command: command)
     }
 }
 
@@ -235,42 +278,59 @@ func handleViewAll(inpArray: [String]){
     }
 }
 
-func handleViewItem(inpArray: [String]){
-    let itemId = Int(inpArray[1])!
-    viewItem(id: itemId)
-}
-
-func handleDeleteItem(inpArray: [String]){
-    let itemId = Int(inpArray[1])!
-    deleteItem(id: itemId)
-}
-
-func handleSort(inpArray: [String]){
-    let sortTypeStr = inpArray[1].uppercased()
-    let sortType = SORT_TYPE(rawValue: sortTypeStr)!
-    if inpArray[2] == "true"{
-        viewSorted(sortType: sortType, asc: true)
-    }else{
-        viewSorted(sortType: sortType, asc: false)
+func handleViewItem(inpArray: [String], command: Command){
+    if inpArray.count == 2 {
+        let itemId = Int(inpArray[1])
+        viewItem(inpId: itemId, command: command)
+    } else {
+        invalidCommand(command: command)
     }
 }
 
-func handleEdit(inpArray: [String]){
-    let editType = EDIT_TYPE(rawValue: inpArray[1].uppercased())
-    let id = Int(inpArray[2])!
-    switch editType{
-            case .TITLE:
-                editItem(id: id, title: inpArray[3])
-            case .PRIORITY:
-                editItem(id: id, priority: Int(inpArray[3])!)
-            case .CONTENT:
-                editItem(id: id, content: inpArray[3])
-            case .none:
-                print("Please enter a valid edit type.")
-        }
+func handleDeleteItem(inpArray: [String], command: Command){
+    if inpArray.count == 2 {
+        let itemId = Int(inpArray[1])
+        deleteItem(inpId: itemId, command: command)
+    } else {
+        invalidCommand(command: command)
+    }
 }
 
-// ----------
+func handleSort(inpArray: [String], command: Command){
+    if inpArray.count >= 2 {
+        let sortTypeStr = inpArray[1].uppercased()
+        let sortType = SORT_TYPE(rawValue: sortTypeStr)
+        if inpArray.count < 3 || inpArray[2] == "true"{
+            viewSorted(inpSortType: sortType, asc: true, command: command)
+        } else {
+            viewSorted(inpSortType: sortType, asc: false, command: command)
+        }
+    } else {
+        invalidCommand(command: command)
+    }
+}
+
+func handleEdit(inpArray: [String], command: Command){
+    if inpArray.count >= 4 {
+        let editType = EDIT_TYPE(rawValue: inpArray[1].uppercased())
+        let id = Int(inpArray[2])
+        switch editType{
+                case .TITLE:
+                    editItem(inpId: id, inpTitle: inpArray[3], command: command)
+                case .PRIORITY:
+                    editItem(inpId: id, inpPriority: Int(inpArray[3]), command: command)
+                case .CONTENT:
+                    editItem(inpId: id, inpContent: Array(inpArray[3...inpArray.endIndex - 1]).joined(separator: " "), command: command)
+                case .none:
+                    print("Please enter a valid edit type.")
+                    print(help(command: command))
+        }
+    } else {
+        invalidCommand(command: command)
+    }
+}
+
+// ---------------------
 
 func handle_cmd(inp: String) -> Bool{
     let inpArray = inp.components(separatedBy: " ")
@@ -278,22 +338,25 @@ func handle_cmd(inp: String) -> Bool{
     let command = Command(rawValue: cmd)
     switch command {
     case .HELP:
-        handle_help(inpArray: inpArray)
+        handleHelp(inpArray: inpArray)
     case .ADD:
         print("Add")
     case .CREATE:
-        handleCreate(inpArray: inpArray)
+        handleCreate(inpArray: inpArray, command: command!)
     case .VIEW:
-        handleViewItem(inpArray: inpArray)
+        handleViewItem(inpArray: inpArray, command: command!)
     case .VIEW_ALL:
         handleViewAll(inpArray: inpArray)
     case .EDIT:
-        handleEdit(inpArray: inpArray)
+        handleEdit(inpArray: inpArray, command: command!)
     case .DELETE:
-        handleDeleteItem(inpArray: inpArray)
+        handleDeleteItem(inpArray: inpArray, command: command!)
     case .SORT:
-        handleSort(inpArray: inpArray)
+        handleSort(inpArray: inpArray, command: command!)
+    case .CLEAR:
+        print("\u{001B}[2J")
     case .EXIT:
+        print("\u{001B}[2J")
         return false
     default:
         print("Please enter a valid command")

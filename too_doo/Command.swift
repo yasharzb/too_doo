@@ -38,14 +38,15 @@ enum Command: String, CaseIterable {
     case    SORT
     case    ADD
     case    HELP
+    case    CLEAR
     case    EXIT
-    
+
     var help: String {
         switch self {
         case    .CREATE:
             return "create item/category <title>/<name> <content>/- <priority>/-"
         case    .VIEW_ALL:
-            return "view_all <category_name>"
+            return "view_all <category_name>/-"
         case    .VIEW:
             return "view <item_id>"
         case    .EDIT:
@@ -53,14 +54,15 @@ enum Command: String, CaseIterable {
         case    .DELETE:
             return "delete <item_id>"
         case    .SORT:
-            return "sort title/priority/time true(ascending)/false(descending)"
+            return "sort title/priority/time [true(ascending/default)/false(descending)]"
         case    .ADD:
-            return "add <item_id> <category_name>"
+            return "add <category_name> <item1_id> [<item2_id> ..]"
         case    .HELP:
             return "help <command>"
+        case    .CLEAR:
+            return "clear"
         case    .EXIT:
             return "exit"
-            
         }
     }
 }
