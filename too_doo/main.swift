@@ -46,9 +46,9 @@ enum Command: String, CaseIterable {
         case    .CREATE:
             return "create item/category <title>/<name> <content>/- <priority>/-"
         case    .VIEW_ALL:
-            return "view_all <category_name>/-"
+            return "view_all items/categories"
         case    .VIEW:
-            return "view <item_id>"
+            return "view item/category <item_id>/<category_name>"
         case    .EDIT:
             return "edit title/content/priority <item_id> <new_value>"
         case    .DELETE:
@@ -132,6 +132,7 @@ func ==(lhs: TodoItem, rhs: TodoItem) -> Bool {
 }
 
 var items = [Int:TodoItem]()
+var categories = [String:Array<Int>]()
 
 func checkNotNil(command: Command, _ args: Any?...) -> Bool{
     for argument in args {
@@ -160,10 +161,29 @@ func createItem(inpTitle: String?, inpContent: String?, inpPriority: Int?, comma
     }
 }
 
-func viewAll(){
+func createCategory(inpCategoryName: String?, command: Command){
+    if checkNotNil(command: command, inpCategoryName){
+        let categoryName = inpCategoryName!
+        if categories[categoryName] != nil {
+            print("Category name already exists!")
+        }else{
+            categories[categoryName] = []
+        }
+    }
+}
+
+func viewAllItems(){
     for (_,item) in items{
         print(item)
     }
+    print()
+}
+
+func viewAllCategories(){
+    for (category, _) in categories{
+        print(category)
+    }
+    print()
 }
 
 func viewItem(inpId: Int?, command: Command){
@@ -259,9 +279,11 @@ func handleCreate(inpArray: [String], command: Command){
             let title = inpArray[2]
             let content = Array(inpArray[3...inpArray.endIndex - 2]).joined(separator: " ")
             createItem(inpTitle: title, inpContent: content, inpPriority: priority, command: command)
-        }else{
+        }else if inpArray[1] == "category"{
             let categoryName = inpArray[2]
-            // todo
+            createCategory(inpCategoryName: categoryName, command: command)
+        }else{
+            invalidCommand(command: command)
         }
     }else{
         invalidCommand(command: command)
@@ -269,12 +291,18 @@ func handleCreate(inpArray: [String], command: Command){
 }
 
 
-func handleViewAll(inpArray: [String]){
-    if inpArray.count == 1{
-        viewAll()
-    }else{
-        let categoryName = inpArray[1]
-            // todo
+func handleViewAll(inpArray: [String], command: Command){
+    if inpArray.count != 2{
+        invalidCommand(command: command)
+        return
+    }
+    if inpArray[1].lowercased() == "items"{
+        viewAllItems()
+    }else if inpArray[1].lowercased() == "categories"{
+        viewAllCategories()
+    }
+    else{
+        invalidCommand(command: command)
     }
 }
 
@@ -346,7 +374,7 @@ func handle_cmd(inp: String) -> Bool{
     case .VIEW:
         handleViewItem(inpArray: inpArray, command: command!)
     case .VIEW_ALL:
-        handleViewAll(inpArray: inpArray)
+        handleViewAll(inpArray: inpArray, command: command!)
     case .EDIT:
         handleEdit(inpArray: inpArray, command: command!)
     case .DELETE:
