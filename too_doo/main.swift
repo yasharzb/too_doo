@@ -198,6 +198,19 @@ func viewItem(inpId: Int?, command: Command){
     }
 }
 
+func viewCategory(inpCategoryName: String?, command: Command){
+    if checkNotNil(command: command, inpCategoryName){
+        let name = inpCategoryName!
+        let category = categories[name]
+        if category != nil{
+            print("Todo Ids:")
+            print(category!)
+        }else{
+            print("Category not found!")
+        }
+    }
+}
+
 enum EDIT_TYPE: String, CaseIterable{
     case TITLE
     case CONTENT
@@ -306,10 +319,17 @@ func handleViewAll(inpArray: [String], command: Command){
     }
 }
 
-func handleViewItem(inpArray: [String], command: Command){
-    if inpArray.count == 2 {
-        let itemId = Int(inpArray[1])
-        viewItem(inpId: itemId, command: command)
+func handleViewItemCategory(inpArray: [String], command: Command){
+    if inpArray.count == 3 {
+        if inpArray[1] == "item"{
+            let itemId = Int(inpArray[2])
+            viewItem(inpId: itemId, command: command)
+        }else if inpArray[1] == "category"{
+            let categoryName = inpArray[2]
+            viewCategory(inpCategoryName: categoryName, command: command)
+        }else{
+            invalidCommand(command: command)
+        }
     } else {
         invalidCommand(command: command)
     }
@@ -372,7 +392,7 @@ func handle_cmd(inp: String) -> Bool{
     case .CREATE:
         handleCreate(inpArray: inpArray, command: command!)
     case .VIEW:
-        handleViewItem(inpArray: inpArray, command: command!)
+        handleViewItemCategory(inpArray: inpArray, command: command!)
     case .VIEW_ALL:
         handleViewAll(inpArray: inpArray, command: command!)
     case .EDIT:
