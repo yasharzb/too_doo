@@ -103,7 +103,7 @@ func help(command: Command?) -> String {
 class TodoItem : Hashable, CustomStringConvertible {
     let id :Int
     var title = "untitled"
-    var category = "-"
+    var category :String? = nil
     var content = "-"
     var priority :Int = -1
     var time: Date
@@ -124,7 +124,7 @@ class TodoItem : Hashable, CustomStringConvertible {
         hasher.combine(id)
     }
 
-    public var description: String { return "TodoItem:\(id)  title: \(title)  timestamp: \(time)  cat: \(category)  cont: \(content)  priority: \(priority)" }
+    public var description: String { return "TodoItem:\(id)  title: \(title)  timestamp: \(time)  cat: \(category ?? "-")  cont: \(content)  priority: \(priority)" }
 }
 
 func ==(lhs: TodoItem, rhs: TodoItem) -> Bool {
@@ -277,6 +277,31 @@ func viewSorted(inpSortType: SORT_TYPE?, asc: Bool=true, command: Command){
     }
 }
 
+func addToCategory(inpItemId: Int?, inpCategoryName: String?, command: Command){
+    if checkNotNil(command: command, inpItemId, inpCategoryName){
+        let itemId = inpItemId!
+        let categoryName = inpCategoryName!
+        let item = items[itemId]
+        if item == nil {
+            print("Item not found!")
+            return
+        }
+        if categories[categoryName] == nil {
+            print("Category not found!")
+            return
+        }
+        let previousCategory = item!.category
+        if previousCategory != nil{
+            categories[previousCategory!] = categories[previousCategory!]!.filter{$0 != itemId}
+        }
+        item!.category = categoryName
+        categories[categoryName]!.append(itemId)
+    }else{
+        invalidCommand(command: command)
+    }
+
+}
+
 // -----------------
 
 extension Array {
@@ -348,11 +373,11 @@ func handleSort(inpArray: [String], command: Command){
     if inpArray.count >= 2 {
         let sortTypeStr = inpArray[1].uppercased()
         let sortType = SORT_TYPE(rawValue: sortTypeStr)
-        if inpArray.count < 3 || inpArray[2] == "true"{
+        if inpArray.count < 3 || inpArray[2].lowercased() == "true"{
             viewSorted(inpSortType: sortType, asc: true, command: command)
-        } else {
+        } else if inpArray[2].lowercased() == "false"{
             viewSorted(inpSortType: sortType, asc: false, command: command)
-        }
+        }else{ invalidCommand(command: command)}
     } else {
         invalidCommand(command: command)
     }
@@ -378,6 +403,18 @@ func handleEdit(inpArray: [String], command: Command){
     }
 }
 
+func handleAddToCategory(inpArray: [String], command: Command){
+    if inpArray.count >= 3 {
+        let categoryName = inpArray[1]
+        for i in 2...(inpArray.count-1){
+            let itemId = Int(inpArray[i])
+            addToCategory(inpItemId: itemId, inpCategoryName: categoryName, command: command)
+        }
+    }else{
+        invalidCommand(command: command)
+    }
+}
+
 // ---------------------
 
 func handle_cmd(inp: String) -> Bool{
@@ -388,7 +425,7 @@ func handle_cmd(inp: String) -> Bool{
     case .HELP:
         handleHelp(inpArray: inpArray)
     case .ADD:
-        print("Add")
+        handleAddToCategory(inpArray: inpArray, command: command!)
     case .CREATE:
         handleCreate(inpArray: inpArray, command: command!)
     case .VIEW:
