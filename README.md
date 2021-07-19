@@ -115,6 +115,7 @@ enum SORT_TYPE: String, CaseIterable {
 به صورت کلی، هر دستوری ابتدا وارد تابع `handle_cmd` می‌شود و سپس پس از تعیین نوع دستور وارد تابع `handleFunction` می‌شود که `Function` یکی از موارد زیر است
 
 - مشاهده‌ی راهنما
+    
     <div dir="ltr">
 
     ```swift
@@ -122,63 +123,80 @@ enum SORT_TYPE: String, CaseIterable {
     ```
     </div>
 - ساخت یک مورد to-do
-      <div dir="ltr">
+    
+    <div dir="ltr">
 
     ```swift
     func createItem(inpTitle: String?, inpContent: String?, inpPriority: Int?, command: Command)
     ```
     </div>
 - ساخت یک دسته‌بندی
-      <div dir="ltr">
+    
+    <div dir="ltr">
 
     ```swift
     func createCategory(inpCategoryName: String?, command: Command)
     ```
     </div>
 - مشاهده‌ی همه‌ی موارد 
-      <div dir="ltr">
+    
+    <div dir="ltr">
 
     ```swift
     func viewAllItems()
     ```
     </div>
 - مشاهده‌ی یک مورد خاص
-      <div dir="ltr">
+    
+    <div dir="ltr">
 
     ```swift
     func viewItem(inpId: Int?, command: Command)
     ```
     </div>
+- مشاهده‌ی همه‌ی دسته‌بندی‌ها
+
+    <div dir="ltr">
+
+    ```swift
+    func viewAllCategories()
+    ```
+    </div>
 - مشاهده‌ی یک دسته‌بندی
-      <div dir="ltr">
+    
+    <div dir="ltr">
 
     ```swift
     func viewCategory(inpCategoryName: String?, command: Command)
     ```
     </div>
 - ویرایش یک مورد
-      <div dir="ltr">
+    
+    <div dir="ltr">
 
     ```swift
     func editItem(inpId: Int?, inpTitle: String?=nil, inpContent: String?=nil, inpPriority: Int?=nil, command: Command)
     ```
     </div>
 - حذف یک مورد
-      <div dir="ltr">
+    
+    <div dir="ltr">
 
     ```swift
     func deleteItem(inpId: Int?, command: Command)
     ```
     </div>
 - نمای مرتب شده
-      <div dir="ltr">
+    
+    <div dir="ltr">
 
     ```swift
     func viewSorted(inpSortType: SORT_TYPE?, asc: Bool=true, command: Command)
     ```
     </div>
 - اضافه شدن یک مورد به دسته‌بندی
-      <div dir="ltr">
+    
+    <div dir="ltr">
 
     ```swift
     func addToCategory(inpItemId: Int?, inpCategoryName: String?, command: Command)
