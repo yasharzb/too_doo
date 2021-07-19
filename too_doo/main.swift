@@ -75,14 +75,7 @@ enum ParamOrder: Int {
     case    PARAM_4
 }
 
-func handleHelp(inpArray: [String]) {
-    if inpArray.count > ParamOrder.PARAM_1.rawValue {
-        let cmdHelp = inpArray[ParamOrder.PARAM_1.rawValue].uppercased()
-        print(help(command: Command(rawValue: cmdHelp)))
-    } else {
-        print(help(command: nil))
-    }
-}
+
 
 
 let NONE: String = ""
@@ -98,7 +91,14 @@ func help(command: Command?) -> String {
     return helpInstr
 }
 
-// ------------------------------------------
+func handleHelp(inpArray: [String]) {
+    if inpArray.count > ParamOrder.PARAM_1.rawValue {
+        let cmdHelp = inpArray[ParamOrder.PARAM_1.rawValue].uppercased()
+        print(help(command: Command(rawValue: cmdHelp)))
+    } else {
+        print(help(command: nil))
+    }
+}// ------------------------------------------
 
 class TodoItem : Hashable, CustomStringConvertible {
     let id :Int
