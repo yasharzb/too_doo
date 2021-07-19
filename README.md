@@ -116,6 +116,8 @@ enum SORT_TYPE: String, CaseIterable {
 
 - مشاهده‌ی راهنما
     
+    مشاهده‌ی راهنمای یک تک دستور
+
     <div dir="ltr">
 
     ```swift
@@ -124,6 +126,8 @@ enum SORT_TYPE: String, CaseIterable {
     </div>
 - ساخت یک مورد to-do
     
+    از context با کلمات جدا از هم نیز پشتیبانی می‌کند.
+
     <div dir="ltr">
 
     ```swift
@@ -138,7 +142,7 @@ enum SORT_TYPE: String, CaseIterable {
     func createCategory(inpCategoryName: String?, command: Command)
     ```
     </div>
-- مشاهده‌ی همه‌ی موارد 
+- مشاهده‌ی همه‌ی todo itemها 
     
     <div dir="ltr">
 
@@ -146,7 +150,7 @@ enum SORT_TYPE: String, CaseIterable {
     func viewAllItems()
     ```
     </div>
-- مشاهده‌ی یک مورد خاص
+- مشاهده‌ی یک todo item خاص با استفاده از آیدی آن
     
     <div dir="ltr">
 
@@ -154,7 +158,7 @@ enum SORT_TYPE: String, CaseIterable {
     func viewItem(inpId: Int?, command: Command)
     ```
     </div>
-- مشاهده‌ی همه‌ی دسته‌بندی‌ها
+- مشاهده‌ی همه‌ی دسته‌بندی‌ها 
 
     <div dir="ltr">
 
@@ -162,7 +166,7 @@ enum SORT_TYPE: String, CaseIterable {
     func viewAllCategories()
     ```
     </div>
-- مشاهده‌ی یک دسته‌بندی
+- مشاهده‌ی یک دسته‌بندی با استفاده از نام آن
     
     <div dir="ltr">
 
@@ -170,7 +174,7 @@ enum SORT_TYPE: String, CaseIterable {
     func viewCategory(inpCategoryName: String?, command: Command)
     ```
     </div>
-- ویرایش یک مورد
+- ویرایش یک todo item
     
     <div dir="ltr">
 
@@ -178,7 +182,7 @@ enum SORT_TYPE: String, CaseIterable {
     func editItem(inpId: Int?, inpTitle: String?=nil, inpContent: String?=nil, inpPriority: Int?=nil, command: Command)
     ```
     </div>
-- حذف یک مورد
+- حذف یک todo item
     
     <div dir="ltr">
 
@@ -194,7 +198,7 @@ enum SORT_TYPE: String, CaseIterable {
     func viewSorted(inpSortType: SORT_TYPE?, asc: Bool=true, command: Command)
     ```
     </div>
-- اضافه شدن یک مورد به دسته‌بندی
+- اضافه شدن یک todo item به دسته‌بندی
     
     <div dir="ltr">
 
@@ -203,4 +207,21 @@ enum SORT_TYPE: String, CaseIterable {
     ```
     </div>
 
+### خطاها
+
+خطاها نیز عبارت اند از:
+- خطای ناموجود بودن دستور: که به طور موردی توسط دستور print چاپ شده است.
+- خطای پارامترهای اشتباه در یک دستور: این خطا توسط تابع InvalidCommand اطلاع داده می‌شود.
+- خطاهای ناموجود بودن todo item
+در دستورات حذف، تغییر و نمایش todo item ها و همینطور افزودنشان به یک دسته رخ می‌دهد و با دستور print اطلاع داده می‌شود.
+- خطای نبود دسته‌بندی وارد شده و یا تکراری بودن دسته‌بندی وارد شده که مورد اول در دستورات اضافه کردن todo item به یک دسته بندی و نمایش todo item های یک دسته بندی و مورد دوم در ساخت یک دسته‌بندی جدید رخ می‌دهد. 
+- خطای نادرست بودن کلیدواژه های دستورات view و sort که با دستور print اطلاع داده‌ می‌شود.
+
+نکته‌‌ی دیگر اینکه اگر دستوری از لحاظ ساختاری اشتباه وارد شود و قابل اجرا نباشد شکل صحیح آن از طریق تابع help برای کاربر نمایش داده‌ می‌شود.
+
+
+### دستورات اضافه
+دو دستور exit و clear نیز در لیست دستورات وارد شده است که به ترتیب برنامه را به اتمام می‌رسانند و محیط ترمینال را پاک می‌کنند.
 </div>
+
+
